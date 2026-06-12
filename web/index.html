@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NWP Sri Lanka - Government Offices Story Map</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-fullscreen/2.4.0/Control.FullScreen.min.css" />
     <style>
         * {
             margin: 0;
@@ -167,20 +166,22 @@
 
         .popup-content {
             font-size: 0.95em;
-            min-width: 250px;
+            min-width: 280px;
         }
 
         .popup-content h4 {
             color: #2164E8;
-            margin-bottom: 8px;
-            margin-top: 8px;
-            font-size: 1.05em;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            border-bottom: 2px solid #2164E8;
+            padding-bottom: 5px;
         }
 
         .popup-content p {
-            margin: 6px 0;
+            margin: 8px 0;
             color: #333;
-            font-size: 0.9em;
+            font-size: 0.92em;
+            line-height: 1.4;
         }
 
         .popup-content strong {
@@ -227,12 +228,6 @@
             border-radius: 6px;
             font-size: 0.95em;
         }
-
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-        }
     </style>
 </head>
 <body>
@@ -250,7 +245,7 @@
                     <h3>Office Types</h3>
                     <div class="legend-item">
                         <div class="legend-icon icon-pradeshiya"></div>
-                        <span>Pradeshiya Sabha (Village Council)</span>
+                        <span>Pradeshiya Sabha</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-icon icon-municipal"></div>
@@ -266,34 +261,34 @@
                     <h3>Statistics</h3>
                     <div class="stat-item">
                         <span>Total Offices:</span>
-                        <span class="stat-value" id="totalOffices">0</span>
+                        <span class="stat-value" id="totalOffices">10</span>
                     </div>
                     <div class="stat-item">
                         <span>Pradeshiya Sabha:</span>
-                        <span class="stat-value" id="pradeshiyaCount">0</span>
+                        <span class="stat-value" id="pradeshiyaCount">6</span>
                     </div>
                     <div class="stat-item">
                         <span>Municipal:</span>
-                        <span class="stat-value" id="municipalCount">0</span>
+                        <span class="stat-value" id="municipalCount">2</span>
                     </div>
                     <div class="stat-item">
                         <span>District:</span>
-                        <span class="stat-value" id="districtCount">0</span>
+                        <span class="stat-value" id="districtCount">2</span>
                     </div>
                 </div>
 
                 <div class="info-section">
                     <h3>About This Map</h3>
-                    <p>This interactive story map visualizes the location and distribution of local government offices across Kurunegala and Puttalam districts in Sri Lanka's North West Province.</p>
-                    <p style="margin-top: 10px;">Click on any office marker to view details.</p>
+                    <p>This interactive story map visualizes local government offices in Kurunegala and Puttalam districts.</p>
+                    <p style="margin-top: 10px;"><strong>Click any marker to view details.</strong></p>
                 </div>
 
                 <div class="info-section">
                     <h3>How to Use</h3>
-                    <p>• <strong>Pan:</strong> Click and drag the map</p>
-                    <p>• <strong>Zoom:</strong> Use scroll wheel or +/- buttons</p>
-                    <p>• <strong>Search:</strong> Type office name above</p>
-                    <p>• <strong>Details:</strong> Click any marker</p>
+                    <p>🖱️ <strong>Drag:</strong> Move around map</p>
+                    <p>🔍 <strong>Scroll:</strong> Zoom in/out</p>
+                    <p>🔎 <strong>Search:</strong> Filter offices</p>
+                    <p>📍 <strong>Click:</strong> View office info</p>
                 </div>
             </div>
 
@@ -303,325 +298,197 @@
         </div>
 
         <div class="footer">
-            <p>📍 <strong>North West Province Story Map</strong> | Data Source: Government Offices Database | Satellite Imagery: OpenStreetMap</p>
-            <p style="margin-top: 8px; font-size: 0.85em;">Coordinate System: WGS84 (EPSG:4326)</p>
+            <p>📍 North West Province Story Map | Data Source: Government Offices Database | Satellite Imagery: OpenStreetMap</p>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-fullscreen/2.4.0/Control.FullScreen.min.js"></script>
     <script>
-        // Embedded Government Offices Data
-        const governmentOffices = {
-          "type": "FeatureCollection",
-          "features": [
+        // OFFICE DATA - DIRECTLY IN PAGE
+        const officeData = [
             {
-              "type": "Feature",
-              "properties": {
-                "unique_id": "GOV_001",
-                "name": "Kurunegala Pradeshiya Sabha",
-                "office_type": "Pradeshiya Sabha",
-                "district": "Kurunegala",
-                "latitude": 6.9271,
-                "longitude": 80.7789,
-                "telephone": "+94 37 222 2222",
-                "email": "kurunegala.ps@gov.lk",
-                "address": "Main Street, Kurunegala",
-                "postal_code": "60000"
-              },
-              "geometry": {
-                "type": "Point",
-                "coordinates": [80.7789, 6.9271]
-              }
+                name: "Kurunegala Pradeshiya Sabha",
+                type: "Pradeshiya Sabha",
+                district: "Kurunegala",
+                lat: 6.9271,
+                lng: 80.7789,
+                phone: "+94 37 222 2222",
+                email: "kurunegala.ps@gov.lk",
+                address: "Main Street, Kurunegala",
+                postal: "60000"
             },
             {
-              "type": "Feature",
-              "properties": {
-                "unique_id": "GOV_002",
-                "name": "Mawanella Pradeshiya Sabha",
-                "office_type": "Pradeshiya Sabha",
-                "district": "Kurunegala",
-                "latitude": 7.0456,
-                "longitude": 80.6123,
-                "telephone": "+94 37 234 5678",
-                "email": "mawanella.ps@gov.lk",
-                "address": "Mawanella Junction, Kurunegala",
-                "postal_code": "61111"
-              },
-              "geometry": {
-                "type": "Point",
-                "coordinates": [80.6123, 7.0456]
-              }
+                name: "Mawanella Pradeshiya Sabha",
+                type: "Pradeshiya Sabha",
+                district: "Kurunegala",
+                lat: 7.0456,
+                lng: 80.6123,
+                phone: "+94 37 234 5678",
+                email: "mawanella.ps@gov.lk",
+                address: "Mawanella Junction",
+                postal: "61111"
             },
             {
-              "type": "Feature",
-              "properties": {
-                "unique_id": "GOV_003",
-                "name": "Puttalam Urban Council",
-                "office_type": "Municipal",
-                "district": "Puttalam",
-                "latitude": 8.0281,
-                "longitude": 79.8259,
-                "telephone": "+94 32 222 5555",
-                "email": "puttalam.uc@gov.lk",
-                "address": "Main Road, Puttalam",
-                "postal_code": "61000"
-              },
-              "geometry": {
-                "type": "Point",
-                "coordinates": [79.8259, 8.0281]
-              }
+                name: "Dambadeniya Pradeshiya Sabha",
+                type: "Pradeshiya Sabha",
+                district: "Kurunegala",
+                lat: 7.1850,
+                lng: 80.5234,
+                phone: "+94 37 234 1111",
+                email: "dambadeniya.ps@gov.lk",
+                address: "Dambadeniya",
+                postal: "60500"
             },
             {
-              "type": "Feature",
-              "properties": {
-                "unique_id": "GOV_004",
-                "name": "Chilaw Urban Council",
-                "office_type": "Municipal",
-                "district": "Puttalam",
-                "latitude": 7.1625,
-                "longitude": 79.8178,
-                "telephone": "+94 32 222 3333",
-                "email": "chilaw.uc@gov.lk",
-                "address": "Main Street, Chilaw",
-                "postal_code": "61000"
-              },
-              "geometry": {
-                "type": "Point",
-                "coordinates": [79.8178, 7.1625]
-              }
+                name: "Gampaha Pradeshiya Sabha",
+                type: "Pradeshiya Sabha",
+                district: "Kurunegala",
+                lat: 6.9500,
+                lng: 80.9500,
+                phone: "+94 37 234 2222",
+                email: "gampaha.ps@gov.lk",
+                address: "Gampaha Division",
+                postal: "61000"
             },
             {
-              "type": "Feature",
-              "properties": {
-                "unique_id": "GOV_005",
-                "name": "Kurunegala District Secretariat",
-                "office_type": "District Secretariat",
-                "district": "Kurunegala",
-                "latitude": 6.9200,
-                "longitude": 80.7850,
-                "telephone": "+94 37 223 0000",
-                "email": "kurunegala.ds@gov.lk",
-                "address": "District Secretariat Building, Kurunegala",
-                "postal_code": "60000"
-              },
-              "geometry": {
-                "type": "Point",
-                "coordinates": [80.7850, 6.9200]
-              }
+                name: "Polgahawela Pradeshiya Sabha",
+                type: "Pradeshiya Sabha",
+                district: "Kurunegala",
+                lat: 7.0678,
+                lng: 80.8945,
+                phone: "+94 37 234 3333",
+                email: "polgahawela.ps@gov.lk",
+                address: "Polgahawela",
+                postal: "61000"
             },
             {
-              "type": "Feature",
-              "properties": {
-                "unique_id": "GOV_006",
-                "name": "Puttalam District Secretariat",
-                "office_type": "District Secretariat",
-                "district": "Puttalam",
-                "latitude": 8.0300,
-                "longitude": 79.8300,
-                "telephone": "+94 32 223 0000",
-                "email": "puttalam.ds@gov.lk",
-                "address": "District Secretariat Building, Puttalam",
-                "postal_code": "61000"
-              },
-              "geometry": {
-                "type": "Point",
-                "coordinates": [79.8300, 8.0300]
-              }
+                name: "Warakapola Pradeshiya Sabha",
+                type: "Pradeshiya Sabha",
+                district: "Kurunegala",
+                lat: 6.8234,
+                lng: 80.8567,
+                phone: "+94 37 234 4444",
+                email: "warakapola.ps@gov.lk",
+                address: "Warakapola Junction",
+                postal: "61000"
             },
             {
-              "type": "Feature",
-              "properties": {
-                "unique_id": "GOV_007",
-                "name": "Dambadeniya Pradeshiya Sabha",
-                "office_type": "Pradeshiya Sabha",
-                "district": "Kurunegala",
-                "latitude": 7.1850,
-                "longitude": 80.5234,
-                "telephone": "+94 37 234 1111",
-                "email": "dambadeniya.ps@gov.lk",
-                "address": "Dambadeniya, Kurunegala",
-                "postal_code": "60500"
-              },
-              "geometry": {
-                "type": "Point",
-                "coordinates": [80.5234, 7.1850]
-              }
+                name: "Puttalam Urban Council",
+                type: "Municipal",
+                district: "Puttalam",
+                lat: 8.0281,
+                lng: 79.8259,
+                phone: "+94 32 222 5555",
+                email: "puttalam.uc@gov.lk",
+                address: "Main Road, Puttalam",
+                postal: "61000"
             },
             {
-              "type": "Feature",
-              "properties": {
-                "unique_id": "GOV_008",
-                "name": "Gampaha Pradeshiya Sabha",
-                "office_type": "Pradeshiya Sabha",
-                "district": "Kurunegala",
-                "latitude": 6.9500,
-                "longitude": 80.9500,
-                "telephone": "+94 37 234 2222",
-                "email": "gampaha.ps@gov.lk",
-                "address": "Gampaha Division, Kurunegala",
-                "postal_code": "61000"
-              },
-              "geometry": {
-                "type": "Point",
-                "coordinates": [80.9500, 6.9500]
-              }
+                name: "Chilaw Urban Council",
+                type: "Municipal",
+                district: "Puttalam",
+                lat: 7.1625,
+                lng: 79.8178,
+                phone: "+94 32 222 3333",
+                email: "chilaw.uc@gov.lk",
+                address: "Main Street, Chilaw",
+                postal: "61000"
             },
             {
-              "type": "Feature",
-              "properties": {
-                "unique_id": "GOV_009",
-                "name": "Polgahawela Pradeshiya Sabha",
-                "office_type": "Pradeshiya Sabha",
-                "district": "Kurunegala",
-                "latitude": 7.0678,
-                "longitude": 80.8945,
-                "telephone": "+94 37 234 3333",
-                "email": "polgahawela.ps@gov.lk",
-                "address": "Polgahawela, Kurunegala",
-                "postal_code": "61000"
-              },
-              "geometry": {
-                "type": "Point",
-                "coordinates": [80.8945, 7.0678]
-              }
+                name: "Kurunegala District Secretariat",
+                type: "District Secretariat",
+                district: "Kurunegala",
+                lat: 6.9200,
+                lng: 80.7850,
+                phone: "+94 37 223 0000",
+                email: "kurunegala.ds@gov.lk",
+                address: "District Secretariat Building",
+                postal: "60000"
             },
             {
-              "type": "Feature",
-              "properties": {
-                "unique_id": "GOV_010",
-                "name": "Warakapola Pradeshiya Sabha",
-                "office_type": "Pradeshiya Sabha",
-                "district": "Kurunegala",
-                "latitude": 6.8234,
-                "longitude": 80.8567,
-                "telephone": "+94 37 234 4444",
-                "email": "warakapola.ps@gov.lk",
-                "address": "Warakapola Junction, Kurunegala",
-                "postal_code": "61000"
-              },
-              "geometry": {
-                "type": "Point",
-                "coordinates": [80.8567, 6.8234]
-              }
+                name: "Puttalam District Secretariat",
+                type: "District Secretariat",
+                district: "Puttalam",
+                lat: 8.0300,
+                lng: 79.8300,
+                phone: "+94 32 223 0000",
+                email: "puttalam.ds@gov.lk",
+                address: "District Secretariat Building",
+                postal: "61000"
             }
-          ]
-        };
+        ];
 
-        // Initialize map
+        // Initialize map centered on NWP
         const map = L.map('map').setView([6.98, 80.2], 9);
 
-        // Add satellite layer
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: '© Esri',
+        // Add OSM tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
             maxZoom: 18
         }).addTo(map);
 
-        // Layer control
-        L.control.layers(
-            {
-                'Satellite': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                    attribution: '© Esri'
-                }),
-                'Street': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                })
-            },
-            {},
-            { position: 'topright' }
-        ).addTo(map);
+        // Color and style for markers
+        function getColor(type) {
+            if (type === 'Pradeshiya Sabha') return '#2164E8';
+            if (type === 'Municipal') return '#FF3232';
+            if (type === 'District Secretariat') return '#32C832';
+            return '#333';
+        }
 
-        // Add fullscreen control
-        L.control.fullscreen({ position: 'topright' }).addTo(map);
+        const markers = [];
 
-        function getMarkerOptions(type) {
-            const baseOptions = {
-                radius: 8,
+        // Add all markers to map
+        officeData.forEach(office => {
+            // Create marker
+            const marker = L.circleMarker([office.lat, office.lng], {
+                radius: office.type === 'District Secretariat' ? 9 : 8,
+                fillColor: getColor(office.type),
                 color: '#000',
                 weight: 2,
                 opacity: 1,
                 fillOpacity: 0.85
-            };
+            }).addTo(map);
 
-            if (type === 'Pradeshiya Sabha') {
-                return { ...baseOptions, fillColor: '#2164E8' };
-            } else if (type === 'Municipal') {
-                return { ...baseOptions, fillColor: '#FF3232' };
-            } else if (type === 'District Secretariat') {
-                return { ...baseOptions, fillColor: '#32C832', radius: 9 };
-            }
-            return baseOptions;
-        }
+            // Create popup
+            const popup = `
+                <div class="popup-content">
+                    <h4>${office.name}</h4>
+                    <p><strong>Type:</strong> ${office.type}</p>
+                    <p><strong>District:</strong> ${office.district}</p>
+                    <p><strong>Address:</strong> ${office.address}</p>
+                    <p><strong>Phone:</strong> ${office.phone}</p>
+                    <p><strong>Email:</strong> ${office.email}</p>
+                    <p><strong>Postal Code:</strong> ${office.postal}</p>
+                    <p><strong>Coordinates:</strong> ${office.lat.toFixed(4)}, ${office.lng.toFixed(4)}</p>
+                </div>
+            `;
 
-        // Store markers
-        const markers = [];
-        let currentStats = { pradeshiya: 0, municipal: 0, district: 0, total: 0 };
+            marker.bindPopup(popup, { maxWidth: 300 });
+            markers.push({ marker, office });
+        });
 
-        // Add markers from data
-        if (governmentOffices && governmentOffices.features) {
-            governmentOffices.features.forEach(office => {
-                const props = office.properties;
-                const coords = office.geometry.coordinates;
-                const lat = coords[1];
-                const lng = coords[0];
-
-                // Count by type
-                currentStats.total++;
-                if (props.office_type === 'Pradeshiya Sabha') currentStats.pradeshiya++;
-                else if (props.office_type === 'Municipal') currentStats.municipal++;
-                else if (props.office_type === 'District Secretariat') currentStats.district++;
-
-                // Create popup content
-                let popupContent = `
-                    <div class="popup-content">
-                        <h4>${props.name}</h4>
-                        <p><strong>Type:</strong> ${props.office_type}</p>
-                        <p><strong>District:</strong> ${props.district}</p>
-                        <p><strong>Address:</strong> ${props.address || 'N/A'}</p>
-                        <p><strong>Phone:</strong> ${props.telephone || 'N/A'}</p>
-                        <p><strong>Email:</strong> ${props.email || 'N/A'}</p>
-                        <p><strong>Postal Code:</strong> ${props.postal_code || 'N/A'}</p>
-                        <p><strong>Coordinates:</strong> ${lat.toFixed(4)}, ${lng.toFixed(4)}</p>
-                    </div>
-                `;
-
-                // Create marker
-                const marker = L.circleMarker([lat, lng], getMarkerOptions(props.office_type))
-                    .bindPopup(popupContent, { maxWidth: 300 })
-                    .addTo(map);
-
-                markers.push({ marker, props, lat, lng });
-            });
-        }
-
-        // Update statistics
-        document.getElementById('totalOffices').textContent = currentStats.total;
-        document.getElementById('pradeshiyaCount').textContent = currentStats.pradeshiya;
-        document.getElementById('municipalCount').textContent = currentStats.municipal;
-        document.getElementById('districtCount').textContent = currentStats.district;
+        // Fit map to all markers
+        const group = new L.featureGroup(markers.map(m => m.marker));
+        map.fitBounds(group.getBounds(), { padding: [50, 50] });
 
         // Search functionality
         document.getElementById('searchBox').addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase();
 
-            markers.forEach(({ marker, props }) => {
+            markers.forEach(({ marker, office }) => {
                 if (searchTerm === '') {
                     marker.setOpacity(1);
-                } else if (props.name.toLowerCase().includes(searchTerm) ||
-                           props.office_type.toLowerCase().includes(searchTerm) ||
-                           props.district.toLowerCase().includes(searchTerm)) {
+                } else if (
+                    office.name.toLowerCase().includes(searchTerm) ||
+                    office.type.toLowerCase().includes(searchTerm) ||
+                    office.district.toLowerCase().includes(searchTerm)
+                ) {
                     marker.setOpacity(1);
                 } else {
                     marker.setOpacity(0.2);
                 }
             });
         });
-
-        // Zoom to bounds on load
-        if (markers.length > 0) {
-            const bounds = L.latLngBounds(markers.map(m => [m.lat, m.lng]));
-            map.fitBounds(bounds, { padding: [50, 50] });
-        }
     </script>
 </body>
 </html>
