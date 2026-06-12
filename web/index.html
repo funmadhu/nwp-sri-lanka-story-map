@@ -82,6 +82,7 @@
             color: #333;
             margin-bottom: 12px;
             font-size: 1.1em;
+            font-weight: 600;
         }
 
         .legend-item {
@@ -99,18 +100,16 @@
             border: 2px solid #333;
         }
 
-        .icon-pradeshiya {
+        .icon-ps {
             background: #2164E8;
         }
 
-        .icon-municipal {
+        .icon-uc {
             background: #FF3232;
-            border-radius: 2px;
         }
 
-        .icon-district {
+        .icon-mc {
             background: #32C832;
-            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
         }
 
         .stats {
@@ -125,6 +124,7 @@
             color: #333;
             margin-bottom: 12px;
             font-size: 1.1em;
+            font-weight: 600;
         }
 
         .stat-item {
@@ -156,6 +156,7 @@
             color: #333;
             margin-bottom: 10px;
             font-size: 1em;
+            font-weight: 600;
         }
 
         .info-section p {
@@ -244,16 +245,16 @@
                 <div class="legend">
                     <h3>Office Types</h3>
                     <div class="legend-item">
-                        <div class="legend-icon icon-pradeshiya"></div>
-                        <span>Pradeshiya Sabha</span>
+                        <div class="legend-icon icon-ps"></div>
+                        <span>Pradeshiya Sabha (PS)</span>
                     </div>
                     <div class="legend-item">
-                        <div class="legend-icon icon-municipal"></div>
-                        <span>Municipal Council</span>
+                        <div class="legend-icon icon-uc"></div>
+                        <span>Urban Council (UC)</span>
                     </div>
                     <div class="legend-item">
-                        <div class="legend-icon icon-district"></div>
-                        <span>District Secretariat</span>
+                        <div class="legend-icon icon-mc"></div>
+                        <span>Municipal Council (MC)</span>
                     </div>
                 </div>
 
@@ -261,31 +262,43 @@
                     <h3>Statistics</h3>
                     <div class="stat-item">
                         <span>Total Offices:</span>
-                        <span class="stat-value" id="totalOffices">10</span>
+                        <span class="stat-value" id="totalOffices">33</span>
                     </div>
                     <div class="stat-item">
                         <span>Pradeshiya Sabha:</span>
-                        <span class="stat-value" id="pradeshiyaCount">6</span>
+                        <span class="stat-value" id="psCount">0</span>
                     </div>
                     <div class="stat-item">
-                        <span>Municipal:</span>
-                        <span class="stat-value" id="municipalCount">2</span>
+                        <span>Urban Council:</span>
+                        <span class="stat-value" id="ucCount">0</span>
                     </div>
                     <div class="stat-item">
-                        <span>District:</span>
-                        <span class="stat-value" id="districtCount">2</span>
+                        <span>Municipal Council:</span>
+                        <span class="stat-value" id="mcCount">0</span>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <h3>By District</h3>
+                    <div class="stat-item">
+                        <span>Kurunegala:</span>
+                        <span class="stat-value" id="kurunegalaCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Puttalam:</span>
+                        <span class="stat-value" id="puttalamCount">0</span>
                     </div>
                 </div>
 
                 <div class="info-section">
                     <h3>About This Map</h3>
-                    <p>This interactive story map visualizes local government offices in Kurunegala and Puttalam districts.</p>
-                    <p style="margin-top: 10px;"><strong>Click any marker to view details.</strong></p>
+                    <p>This interactive story map visualizes all 33 local government offices across Kurunegala and Puttalam districts in Sri Lanka's North West Province.</p>
+                    <p style="margin-top: 10px;"><strong>💡 Click any marker to view office details.</strong></p>
                 </div>
 
                 <div class="info-section">
                     <h3>How to Use</h3>
-                    <p>🖱️ <strong>Drag:</strong> Move around map</p>
+                    <p>🗺️ <strong>Drag:</strong> Move around map</p>
                     <p>🔍 <strong>Scroll:</strong> Zoom in/out</p>
                     <p>🔎 <strong>Search:</strong> Filter offices</p>
                     <p>📍 <strong>Click:</strong> View office info</p>
@@ -298,128 +311,51 @@
         </div>
 
         <div class="footer">
-            <p>📍 North West Province Story Map | Data Source: Government Offices Database | Satellite Imagery: OpenStreetMap</p>
+            <p>📍 North West Province Story Map | 33 Government Offices | Coordinate System: WGS84 (EPSG:4326)</p>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script>
-        // OFFICE DATA - DIRECTLY IN PAGE
+        // ALL 33 OFFICES FROM CSV
         const officeData = [
-            {
-                name: "Kurunegala Pradeshiya Sabha",
-                type: "Pradeshiya Sabha",
-                district: "Kurunegala",
-                lat: 6.9271,
-                lng: 80.7789,
-                phone: "+94 37 222 2222",
-                email: "kurunegala.ps@gov.lk",
-                address: "Main Street, Kurunegala",
-                postal: "60000"
-            },
-            {
-                name: "Mawanella Pradeshiya Sabha",
-                type: "Pradeshiya Sabha",
-                district: "Kurunegala",
-                lat: 7.0456,
-                lng: 80.6123,
-                phone: "+94 37 234 5678",
-                email: "mawanella.ps@gov.lk",
-                address: "Mawanella Junction",
-                postal: "61111"
-            },
-            {
-                name: "Dambadeniya Pradeshiya Sabha",
-                type: "Pradeshiya Sabha",
-                district: "Kurunegala",
-                lat: 7.1850,
-                lng: 80.5234,
-                phone: "+94 37 234 1111",
-                email: "dambadeniya.ps@gov.lk",
-                address: "Dambadeniya",
-                postal: "60500"
-            },
-            {
-                name: "Gampaha Pradeshiya Sabha",
-                type: "Pradeshiya Sabha",
-                district: "Kurunegala",
-                lat: 6.9500,
-                lng: 80.9500,
-                phone: "+94 37 234 2222",
-                email: "gampaha.ps@gov.lk",
-                address: "Gampaha Division",
-                postal: "61000"
-            },
-            {
-                name: "Polgahawela Pradeshiya Sabha",
-                type: "Pradeshiya Sabha",
-                district: "Kurunegala",
-                lat: 7.0678,
-                lng: 80.8945,
-                phone: "+94 37 234 3333",
-                email: "polgahawela.ps@gov.lk",
-                address: "Polgahawela",
-                postal: "61000"
-            },
-            {
-                name: "Warakapola Pradeshiya Sabha",
-                type: "Pradeshiya Sabha",
-                district: "Kurunegala",
-                lat: 6.8234,
-                lng: 80.8567,
-                phone: "+94 37 234 4444",
-                email: "warakapola.ps@gov.lk",
-                address: "Warakapola Junction",
-                postal: "61000"
-            },
-            {
-                name: "Puttalam Urban Council",
-                type: "Municipal",
-                district: "Puttalam",
-                lat: 8.0281,
-                lng: 79.8259,
-                phone: "+94 32 222 5555",
-                email: "puttalam.uc@gov.lk",
-                address: "Main Road, Puttalam",
-                postal: "61000"
-            },
-            {
-                name: "Chilaw Urban Council",
-                type: "Municipal",
-                district: "Puttalam",
-                lat: 7.1625,
-                lng: 79.8178,
-                phone: "+94 32 222 3333",
-                email: "chilaw.uc@gov.lk",
-                address: "Main Street, Chilaw",
-                postal: "61000"
-            },
-            {
-                name: "Kurunegala District Secretariat",
-                type: "District Secretariat",
-                district: "Kurunegala",
-                lat: 6.9200,
-                lng: 80.7850,
-                phone: "+94 37 223 0000",
-                email: "kurunegala.ds@gov.lk",
-                address: "District Secretariat Building",
-                postal: "60000"
-            },
-            {
-                name: "Puttalam District Secretariat",
-                type: "District Secretariat",
-                district: "Puttalam",
-                lat: 8.0300,
-                lng: 79.8300,
-                phone: "+94 32 223 0000",
-                email: "puttalam.ds@gov.lk",
-                address: "District Secretariat Building",
-                postal: "61000"
-            }
+            { id: 1, name: "Kurunegala Municipal Council", type: "MC", district: "Kurunegala", lng: 80.367195118540508, lat: 7.490722241666060 },
+            { id: 2, name: "Kuliyapitiya Urban Council", type: "UC", district: "Kurunegala", lng: 80.041406644378853, lat: 7.469992130410558 },
+            { id: 3, name: "Kurunegala Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.343379800108522, lat: 7.506326347223600 },
+            { id: 4, name: "Alawwa Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.232132271295882, lat: 7.297109485076152 },
+            { id: 5, name: "Bingiriya Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 79.964791666553353, lat: 7.599628854527710 },
+            { id: 6, name: "Galgamuwa Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.269554913987022, lat: 7.995199633033936 },
+            { id: 7, name: "Giribawa Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.228115699696318, lat: 8.080286925897814 },
+            { id: 8, name: "Ibbagamuwa Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.456740155625994, lat: 7.555234483946426 },
+            { id: 9, name: "Kobeigane Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.126567716111097, lat: 7.664887138718550 },
+            { id: 10, name: "Kuliyapitiya Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.077466503841862, lat: 7.464118582214994 },
+            { id: 11, name: "Mahawa Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.273587241752011, lat: 7.821031234611456 },
+            { id: 12, name: "Mawathagama Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.445798624435582, lat: 7.430952605067348 },
+            { id: 13, name: "Narammala Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.213342669320937, lat: 7.432589245450226 },
+            { id: 14, name: "Nikaweratiya Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.118297480142218, lat: 7.752231814848940 },
+            { id: 15, name: "Panduwasnuwara Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.077556038875159, lat: 7.604773617565050 },
+            { id: 16, name: "Pannala Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.022099339837951, lat: 7.328034335318122 },
+            { id: 17, name: "Polgahawela Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.300567298479507, lat: 7.329959088433436 },
+            { id: 18, name: "Polpithigama Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.404296024724772, lat: 7.817273923803934 },
+            { id: 19, name: "Ridigama Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.492072369758105, lat: 7.550212928466638 },
+            { id: 20, name: "Wariyapola Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 80.242303140324253, lat: 7.625354329712822 },
+            { id: 21, name: "Chilaw Urban Council", type: "UC", district: "Puttalam", lng: 79.794635477405478, lat: 7.577946279942408 },
+            { id: 22, name: "Puttalam Urban Council", type: "UC", district: "Puttalam", lng: 79.832646350258685, lat: 8.027227074045426 },
+            { id: 23, name: "Anamaduwa Pradeshiya Sabha", type: "PS", district: "Puttalam", lng: 80.009393507695165, lat: 7.873493421308116 },
+            { id: 24, name: "Arachchikattuwa Pradeshiya Sabha", type: "PS", district: "Puttalam", lng: 79.834193455608414, lat: 7.671319815038212 },
+            { id: 25, name: "Chilaw Pradeshiya Sabha", type: "PS", district: "Puttalam", lng: 79.850688909931918, lat: 7.495719106182844 },
+            { id: 26, name: "Kalpitiya Pradeshiya Sabha", type: "PS", district: "Puttalam", lng: 79.765572605716542, lat: 8.236447937758616 },
+            { id: 27, name: "Karuwalagaswewa Pradeshiya Sabha", type: "PS", district: "Puttalam", lng: 79.961254171787971, lat: 8.057107265534423 },
+            { id: 28, name: "Nattandiya Pradeshiya Sabha", type: "PS", district: "Puttalam", lng: 79.865594742269906, lat: 7.412617090115904 },
+            { id: 29, name: "Nawagattegama Pradeshiya Sabha", type: "PS", district: "Puttalam", lng: 80.106490499701252, lat: 8.002295318775198 },
+            { id: 30, name: "Puttalam Pradeshiya Sabha", type: "PS", district: "Puttalam", lng: 79.823146633219807, lat: 7.906637890039984 },
+            { id: 31, name: "Wanathawilluwa Pradeshiya Sabha", type: "PS", district: "Puttalam", lng: 79.860208134603937, lat: 8.187757886367988 },
+            { id: 32, name: "Wennappuwa Pradeshiya Sabha", type: "PS", district: "Puttalam", lng: 79.843152880497243, lat: 7.337571336853774 },
+            { id: 33, name: "Udubaddawa Pradeshiya Sabha", type: "PS", district: "Kurunegala", lng: 79.968559753289369, lat: 7.484713805009442 }
         ];
 
-        // Initialize map centered on NWP
-        const map = L.map('map').setView([6.98, 80.2], 9);
+        // Initialize map
+        const map = L.map('map').setView([7.7, 80.0], 9);
 
         // Add OSM tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -427,21 +363,37 @@
             maxZoom: 18
         }).addTo(map);
 
-        // Color and style for markers
+        // Function to get color based on type
         function getColor(type) {
-            if (type === 'Pradeshiya Sabha') return '#2164E8';
-            if (type === 'Municipal') return '#FF3232';
-            if (type === 'District Secretariat') return '#32C832';
+            if (type === 'PS') return '#2164E8';  // Blue
+            if (type === 'UC') return '#FF3232';  // Red
+            if (type === 'MC') return '#32C832';  // Green
             return '#333';
         }
 
-        const markers = [];
+        // Function to get type label
+        function getTypeLabel(type) {
+            if (type === 'PS') return 'Pradeshiya Sabha';
+            if (type === 'UC') return 'Urban Council';
+            if (type === 'MC') return 'Municipal Council';
+            return type;
+        }
 
-        // Add all markers to map
+        const markers = [];
+        let stats = { ps: 0, uc: 0, mc: 0, kurunegala: 0, puttalam: 0 };
+
+        // Add all 33 markers to map
         officeData.forEach(office => {
+            // Count statistics
+            if (office.type === 'PS') stats.ps++;
+            if (office.type === 'UC') stats.uc++;
+            if (office.type === 'MC') stats.mc++;
+            if (office.district === 'Kurunegala') stats.kurunegala++;
+            if (office.district === 'Puttalam') stats.puttalam++;
+
             // Create marker
             const marker = L.circleMarker([office.lat, office.lng], {
-                radius: office.type === 'District Secretariat' ? 9 : 8,
+                radius: office.type === 'MC' ? 9 : 7,
                 fillColor: getColor(office.type),
                 color: '#000',
                 weight: 2,
@@ -453,19 +405,23 @@
             const popup = `
                 <div class="popup-content">
                     <h4>${office.name}</h4>
-                    <p><strong>Type:</strong> ${office.type}</p>
+                    <p><strong>Type:</strong> ${getTypeLabel(office.type)}</p>
                     <p><strong>District:</strong> ${office.district}</p>
-                    <p><strong>Address:</strong> ${office.address}</p>
-                    <p><strong>Phone:</strong> ${office.phone}</p>
-                    <p><strong>Email:</strong> ${office.email}</p>
-                    <p><strong>Postal Code:</strong> ${office.postal}</p>
-                    <p><strong>Coordinates:</strong> ${office.lat.toFixed(4)}, ${office.lng.toFixed(4)}</p>
+                    <p><strong>Coordinates:</strong><br>${office.lat.toFixed(4)}° N, ${office.lng.toFixed(4)}° E</p>
                 </div>
             `;
 
             marker.bindPopup(popup, { maxWidth: 300 });
             markers.push({ marker, office });
         });
+
+        // Update statistics
+        document.getElementById('totalOffices').textContent = officeData.length;
+        document.getElementById('psCount').textContent = stats.ps;
+        document.getElementById('ucCount').textContent = stats.uc;
+        document.getElementById('mcCount').textContent = stats.mc;
+        document.getElementById('kurunegalaCount').textContent = stats.kurunegala;
+        document.getElementById('puttalamCount').textContent = stats.puttalam;
 
         // Fit map to all markers
         const group = new L.featureGroup(markers.map(m => m.marker));
