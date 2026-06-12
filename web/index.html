@@ -167,21 +167,24 @@
 
         .popup-content {
             font-size: 0.95em;
+            min-width: 250px;
         }
 
         .popup-content h4 {
             color: #2164E8;
             margin-bottom: 8px;
             margin-top: 8px;
+            font-size: 1.05em;
         }
 
         .popup-content p {
-            margin: 4px 0;
+            margin: 6px 0;
             color: #333;
+            font-size: 0.9em;
         }
 
         .popup-content strong {
-            color: #333;
+            color: #1a1a1a;
         }
 
         .footer {
@@ -225,23 +228,10 @@
             font-size: 0.95em;
         }
 
-        .office-list {
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .office-item {
-            padding: 8px;
-            margin: 4px 0;
-            background: white;
-            border-left: 3px solid #2164E8;
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-
-        .office-item:hover {
-            background: #e3f2fd;
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
         }
     </style>
 </head>
@@ -276,7 +266,7 @@
                     <h3>Statistics</h3>
                     <div class="stat-item">
                         <span>Total Offices:</span>
-                        <span class="stat-value" id="totalOffices">33</span>
+                        <span class="stat-value" id="totalOffices">0</span>
                     </div>
                     <div class="stat-item">
                         <span>Pradeshiya Sabha:</span>
@@ -320,8 +310,204 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-fullscreen/2.4.0/Control.FullScreen.min.js"></script>
-    <script src="data.js"></script>
     <script>
+        // Embedded Government Offices Data
+        const governmentOffices = {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "properties": {
+                "unique_id": "GOV_001",
+                "name": "Kurunegala Pradeshiya Sabha",
+                "office_type": "Pradeshiya Sabha",
+                "district": "Kurunegala",
+                "latitude": 6.9271,
+                "longitude": 80.7789,
+                "telephone": "+94 37 222 2222",
+                "email": "kurunegala.ps@gov.lk",
+                "address": "Main Street, Kurunegala",
+                "postal_code": "60000"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [80.7789, 6.9271]
+              }
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "unique_id": "GOV_002",
+                "name": "Mawanella Pradeshiya Sabha",
+                "office_type": "Pradeshiya Sabha",
+                "district": "Kurunegala",
+                "latitude": 7.0456,
+                "longitude": 80.6123,
+                "telephone": "+94 37 234 5678",
+                "email": "mawanella.ps@gov.lk",
+                "address": "Mawanella Junction, Kurunegala",
+                "postal_code": "61111"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [80.6123, 7.0456]
+              }
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "unique_id": "GOV_003",
+                "name": "Puttalam Urban Council",
+                "office_type": "Municipal",
+                "district": "Puttalam",
+                "latitude": 8.0281,
+                "longitude": 79.8259,
+                "telephone": "+94 32 222 5555",
+                "email": "puttalam.uc@gov.lk",
+                "address": "Main Road, Puttalam",
+                "postal_code": "61000"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [79.8259, 8.0281]
+              }
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "unique_id": "GOV_004",
+                "name": "Chilaw Urban Council",
+                "office_type": "Municipal",
+                "district": "Puttalam",
+                "latitude": 7.1625,
+                "longitude": 79.8178,
+                "telephone": "+94 32 222 3333",
+                "email": "chilaw.uc@gov.lk",
+                "address": "Main Street, Chilaw",
+                "postal_code": "61000"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [79.8178, 7.1625]
+              }
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "unique_id": "GOV_005",
+                "name": "Kurunegala District Secretariat",
+                "office_type": "District Secretariat",
+                "district": "Kurunegala",
+                "latitude": 6.9200,
+                "longitude": 80.7850,
+                "telephone": "+94 37 223 0000",
+                "email": "kurunegala.ds@gov.lk",
+                "address": "District Secretariat Building, Kurunegala",
+                "postal_code": "60000"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [80.7850, 6.9200]
+              }
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "unique_id": "GOV_006",
+                "name": "Puttalam District Secretariat",
+                "office_type": "District Secretariat",
+                "district": "Puttalam",
+                "latitude": 8.0300,
+                "longitude": 79.8300,
+                "telephone": "+94 32 223 0000",
+                "email": "puttalam.ds@gov.lk",
+                "address": "District Secretariat Building, Puttalam",
+                "postal_code": "61000"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [79.8300, 8.0300]
+              }
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "unique_id": "GOV_007",
+                "name": "Dambadeniya Pradeshiya Sabha",
+                "office_type": "Pradeshiya Sabha",
+                "district": "Kurunegala",
+                "latitude": 7.1850,
+                "longitude": 80.5234,
+                "telephone": "+94 37 234 1111",
+                "email": "dambadeniya.ps@gov.lk",
+                "address": "Dambadeniya, Kurunegala",
+                "postal_code": "60500"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [80.5234, 7.1850]
+              }
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "unique_id": "GOV_008",
+                "name": "Gampaha Pradeshiya Sabha",
+                "office_type": "Pradeshiya Sabha",
+                "district": "Kurunegala",
+                "latitude": 6.9500,
+                "longitude": 80.9500,
+                "telephone": "+94 37 234 2222",
+                "email": "gampaha.ps@gov.lk",
+                "address": "Gampaha Division, Kurunegala",
+                "postal_code": "61000"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [80.9500, 6.9500]
+              }
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "unique_id": "GOV_009",
+                "name": "Polgahawela Pradeshiya Sabha",
+                "office_type": "Pradeshiya Sabha",
+                "district": "Kurunegala",
+                "latitude": 7.0678,
+                "longitude": 80.8945,
+                "telephone": "+94 37 234 3333",
+                "email": "polgahawela.ps@gov.lk",
+                "address": "Polgahawela, Kurunegala",
+                "postal_code": "61000"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [80.8945, 7.0678]
+              }
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "unique_id": "GOV_010",
+                "name": "Warakapola Pradeshiya Sabha",
+                "office_type": "Pradeshiya Sabha",
+                "district": "Kurunegala",
+                "latitude": 6.8234,
+                "longitude": 80.8567,
+                "telephone": "+94 37 234 4444",
+                "email": "warakapola.ps@gov.lk",
+                "address": "Warakapola Junction, Kurunegala",
+                "postal_code": "61000"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [80.8567, 6.8234]
+              }
+            }
+          ]
+        };
+
         // Initialize map
         const map = L.map('map').setView([6.98, 80.2], 9);
 
@@ -331,19 +517,15 @@
             maxZoom: 18
         }).addTo(map);
 
-        // Add street layer option
-        const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 18
-        });
-
         // Layer control
         L.control.layers(
             {
                 'Satellite': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                     attribution: '© Esri'
                 }),
-                'Street': streetLayer
+                'Street': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                })
             },
             {},
             { position: 'topright' }
@@ -352,41 +534,13 @@
         // Add fullscreen control
         L.control.fullscreen({ position: 'topright' }).addTo(map);
 
-        // Custom icons
-        const pradeshiyaIcon = L.circleMarker([0, 0], {
-            radius: 8,
-            fillColor: '#2164E8',
-            color: '#000',
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.8
-        });
-
-        const municipalIcon = L.circleMarker([0, 0], {
-            radius: 8,
-            fillColor: '#FF3232',
-            color: '#000',
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.8
-        });
-
-        const districtIcon = L.circleMarker([0, 0], {
-            radius: 9,
-            fillColor: '#32C832',
-            color: '#000',
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.8
-        });
-
         function getMarkerOptions(type) {
             const baseOptions = {
                 radius: 8,
                 color: '#000',
                 weight: 2,
                 opacity: 1,
-                fillOpacity: 0.8
+                fillOpacity: 0.85
             };
 
             if (type === 'Pradeshiya Sabha') {
@@ -401,43 +555,47 @@
 
         // Store markers
         const markers = [];
-        let currentStats = { pradeshiya: 0, municipal: 0, district: 0 };
+        let currentStats = { pradeshiya: 0, municipal: 0, district: 0, total: 0 };
 
         // Add markers from data
-        governmentOffices.features.forEach(office => {
-            const props = office.properties;
-            const coords = office.geometry.coordinates;
-            const lat = coords[1];
-            const lng = coords[0];
+        if (governmentOffices && governmentOffices.features) {
+            governmentOffices.features.forEach(office => {
+                const props = office.properties;
+                const coords = office.geometry.coordinates;
+                const lat = coords[1];
+                const lng = coords[0];
 
-            // Count by type
-            if (props.office_type === 'Pradeshiya Sabha') currentStats.pradeshiya++;
-            else if (props.office_type === 'Municipal') currentStats.municipal++;
-            else if (props.office_type === 'District Secretariat') currentStats.district++;
+                // Count by type
+                currentStats.total++;
+                if (props.office_type === 'Pradeshiya Sabha') currentStats.pradeshiya++;
+                else if (props.office_type === 'Municipal') currentStats.municipal++;
+                else if (props.office_type === 'District Secretariat') currentStats.district++;
 
-            // Create popup content
-            let popupContent = `
-                <div class="popup-content">
-                    <h4>${props.name}</h4>
-                    <p><strong>Type:</strong> ${props.office_type}</p>
-                    <p><strong>District:</strong> ${props.district}</p>
-                    <p><strong>Address:</strong> ${props.address || 'N/A'}</p>
-                    <p><strong>Phone:</strong> ${props.telephone || 'N/A'}</p>
-                    <p><strong>Email:</strong> ${props.email || 'N/A'}</p>
-                    <p><strong>Postal Code:</strong> ${props.postal_code || 'N/A'}</p>
-                    <p><strong>Coordinates:</strong> ${lat.toFixed(4)}, ${lng.toFixed(4)}</p>
-                </div>
-            `;
+                // Create popup content
+                let popupContent = `
+                    <div class="popup-content">
+                        <h4>${props.name}</h4>
+                        <p><strong>Type:</strong> ${props.office_type}</p>
+                        <p><strong>District:</strong> ${props.district}</p>
+                        <p><strong>Address:</strong> ${props.address || 'N/A'}</p>
+                        <p><strong>Phone:</strong> ${props.telephone || 'N/A'}</p>
+                        <p><strong>Email:</strong> ${props.email || 'N/A'}</p>
+                        <p><strong>Postal Code:</strong> ${props.postal_code || 'N/A'}</p>
+                        <p><strong>Coordinates:</strong> ${lat.toFixed(4)}, ${lng.toFixed(4)}</p>
+                    </div>
+                `;
 
-            // Create marker
-            const marker = L.circleMarker([lat, lng], getMarkerOptions(props.office_type))
-                .bindPopup(popupContent)
-                .addTo(map);
+                // Create marker
+                const marker = L.circleMarker([lat, lng], getMarkerOptions(props.office_type))
+                    .bindPopup(popupContent, { maxWidth: 300 })
+                    .addTo(map);
 
-            markers.push({ marker, props, lat, lng });
-        });
+                markers.push({ marker, props, lat, lng });
+            });
+        }
 
         // Update statistics
+        document.getElementById('totalOffices').textContent = currentStats.total;
         document.getElementById('pradeshiyaCount').textContent = currentStats.pradeshiya;
         document.getElementById('municipalCount').textContent = currentStats.municipal;
         document.getElementById('districtCount').textContent = currentStats.district;
@@ -453,7 +611,6 @@
                            props.office_type.toLowerCase().includes(searchTerm) ||
                            props.district.toLowerCase().includes(searchTerm)) {
                     marker.setOpacity(1);
-                    marker.openPopup();
                 } else {
                     marker.setOpacity(0.2);
                 }
@@ -461,7 +618,10 @@
         });
 
         // Zoom to bounds on load
-        map.fitBounds(L.latLngBounds(markers.map(m => [m.lat, m.lng])));
+        if (markers.length > 0) {
+            const bounds = L.latLngBounds(markers.map(m => [m.lat, m.lng]));
+            map.fitBounds(bounds, { padding: [50, 50] });
+        }
     </script>
 </body>
 </html>
